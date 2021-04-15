@@ -1,4 +1,4 @@
-# :octocat: :date: React Github Contributions Component :date: :octocat:
+# :date: React Github Contributions Component :date:
 My first npm project. I noticed there aren't any builds like this so I decided I'll create one myself. This component builds up a calendar from the commits you made to github.
 ![Component's screenshot](/image/ghcc-screenshot.jpg)
 
