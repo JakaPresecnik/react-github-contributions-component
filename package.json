@@ -1,8 +1,8 @@
 {
   "name": "react-github-contributions-component",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React component that builds your contributions calendar per year",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/.bin/babel src --out-file index.js"

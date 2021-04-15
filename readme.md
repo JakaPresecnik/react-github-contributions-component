@@ -7,7 +7,7 @@ My first npm project. I noticed there aren't any builds like this so I decided I
     * log in to your github account, and go into `settings` tab
     * go to`Developer settings`, and then `Personal access tokens`
     * click on `Generate new token` and check only the following:
-        [Generating token](/image/generate-token.jpg)
+        ![Generating token](/image/generate-token.jpg)
     * Generate token and copy the given token
 * Create `.env` file at the root of your project folder (make sure you have .env included in .gitignore), and paste the given personal access token:
 ```
@@ -29,7 +29,7 @@ import {GithubContribution} from 'react-github-contributions-component'
 
 ...and use it in one of your components.
 ```
-<GithubContribution userName="yourusername" />
+<GithubContribution userName="<yourusername>" theme="<option>" />
 ```
 ```
 import {GithubContribution} from 'react-github-contributions-component';
@@ -37,10 +37,18 @@ import {GithubContribution} from 'react-github-contributions-component';
 function App() {
   return (
     <div className="App">
-        <GithubContribution userName="jakapresecnik" />
+        <GithubContribution userName="jakapresecnik" theme="dark" />
     </div>
   );
 }
+```
+### Themes
+![Theme examples](/image/themes.jpg)
+There are three options for now:
+```
+theme="light"
+theme="dark"
+theme="purpleDark"
 ```
 
 ## Future versions

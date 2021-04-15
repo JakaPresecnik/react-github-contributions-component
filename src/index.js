@@ -1,18 +1,23 @@
 import { GraphQL, GraphQLProvider, useGraphQL } from 'graphql-react';
 import React, { useState } from 'react';
+import Loading from './lib';
 
 const token = process.env.REACT_APP_GITHUB_ACCESS_TOKEN;
 
-
-
-const colorsDark = {
-    "NONE": '#161b22',
-    "FIRST_QUARTILE": '#033a16',
-    "SECOND_QUARTILE": '#0f5323',
-    "THIRD_QUARTILE": '#196c2e',
-    "FOURTH_QUARTILE": '#2ea043',
-    plainFont: "#6C756E",
-    highlightedFont: "#749179"
+const colors = {
+    dark: {"NONE": '#161b22', "FIRST_QUARTILE": '#033a16', "SECOND_QUARTILE": '#0f5323',
+    "THIRD_QUARTILE": '#196c2e', "FOURTH_QUARTILE": '#2ea043', plainFont: "#6C756E", highlightedFont: "#749179"},
+    light: {"NONE": '#f5f6f8', "FIRST_QUARTILE": '#9be9a8', "SECOND_QUARTILE": '#40c463',"THIRD_QUARTILE": '#30a14e', 
+    "FOURTH_QUARTILE": '#216e39', plainFont: "#657786", highlightedFont: "#48524d"},
+    purpleDark: {
+        "NONE": '#669999', 
+        "FIRST_QUARTILE": '#666699', 
+        "SECOND_QUARTILE": '#653399',
+        "THIRD_QUARTILE": '#663366', 
+        "FOURTH_QUARTILE": '#650099', 
+        plainFont: "#545179", 
+        highlightedFont: "#674973"
+    }
 }
 
 function fetchOptionsOverride(options) {
@@ -47,7 +52,7 @@ query ($userName:String!, $toDate:DateTime!, $fromDate: DateTime!) {
   }
 `;
 
-function GithubContributionCount({userName, toDate, fromDate}) {
+function GithubContributionCount({userName, toDate, fromDate, theme}) {
     // Memoization allows the `useGraphQL` hook to avoid work in following renders
     // with the same GraphQL operation.
 
@@ -93,7 +98,7 @@ function GithubContributionCount({userName, toDate, fromDate}) {
                             style={{fontFamily: 'Helvetica', fontSize: '12px'}}
                             x={ 13 + i * 640 / 12} 
                             y="20"
-                            fill={colorsDark.plainFont}
+                            fill={colors[theme].plainFont}
                             key={month.name}>{month.name}</text>
                         ))
                 }
@@ -104,7 +109,7 @@ function GithubContributionCount({userName, toDate, fromDate}) {
                                 <rect 
                                     width="10" 
                                     height="10" 
-                                    fill={colorsDark[day.contributionLevel]}
+                                    fill={colors[theme][day.contributionLevel]}
                                     x={i * 12} 
                                     y={25 + day.weekday * 13}
                                     rx="2"
@@ -116,27 +121,31 @@ function GithubContributionCount({userName, toDate, fromDate}) {
                 }
                 <text 
                     style={{fontFamily: 'Helvetica', fontSize: '14px'}}
-                    fill={colorsDark.plainFont}
+                    fill={colors[theme].plainFont}
                     x="15" 
                     y="134">Total contributions in {monthData[0].year}:
                 </text>
                 <text 
                     style={{fontFamily: 'Helvetica', fontSize: '16px', fontWeight: 'bold'}}
-                    fill={colorsDark.highlightedFont}
+                    fill={colors[theme].highlightedFont}
                     x="200" 
                     y="134">{contributions.totalContributions}
                 </text>
             </svg>
         )
     } else {
-        return loading ? 'loading' : 'Error';
+        return loading ? (
+            <Loading width="640" height="137" />
+        ) : (<div>
+            <p>Error! Check your github token.</p>
+        </div>);
     }
 }
 
 const graphql = new GraphQL();
 
-function GithubContribution ({userName}) {
-    
+function GithubContribution ({userName, theme}) {
+
     const [dateRange, setDates] = useState({
         year: new Date().getFullYear(),
         toDate: new Date().toISOString(),
@@ -169,18 +178,18 @@ function GithubContribution ({userName}) {
     return (
         <div>
             <GraphQLProvider graphql={graphql}>
-                <GithubContributionCount userName={userName} toDate={dateRange.toDate} fromDate={dateRange.fromDate} />
+                <GithubContributionCount userName={userName} toDate={dateRange.toDate} fromDate={dateRange.fromDate} theme={theme} />
                 <svg width="640" height="10">
                     <polyline 
                         onClick={e => nextYear(e)}
                         points="280, 0 270, 5 280, 10" 
-                        stroke={colorsDark.highlightedFont} 
+                        stroke={colors[theme].highlightedFont} 
                         strokeWidth="4" 
                         fill="none" />
                     <polyline 
                         onClick={e => pastYear(e)}
                         points="360, 0 370, 5 360, 10" 
-                        stroke={colorsDark.highlightedFont} 
+                        stroke={colors[theme].highlightedFont} 
                         strokeWidth="4" 
                         fill="none" />
                 </svg>
