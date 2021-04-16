@@ -1,4 +1,8 @@
 # :date: React Github Contributions Component :date:
+![NPM version](https://image.shields.io/npm/v/react-github-contributions-component)
+![Travis Status](https://img.shields.io/travis/jakapresecnik/react-github-contributions-component)
+![NPM Downloads](https://img.shields.io/npm/dw/react-github-contributions-component)
+
 My first npm project. I noticed there aren't any builds like this so I decided I'll create one myself. This component builds up a calendar from the commits you made to github.
 ![Component's screenshot](/image/ghcc-screenshot.jpg)
 
