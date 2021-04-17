@@ -42,14 +42,14 @@ function App() {
   );
 }
 ```
+## Options
 ### Themes
 ![Theme examples](/image/themes.jpg)
-There are three options for now:
-```
-theme="light"
-theme="dark"
-theme="purpleDark"
-```
+Select one of these options for different theme:
+`"light", "dark", "purpleDark", "jokerLight", "jokerDark"
+### Direction
+ If you want it to have a different direction use attribute `vertical` in component. You don't need to pass any value in as it tests if it is true or false.
+
 
 ## Future versions
 Like I said I just started building it, and it is still a bit rough, so expect to get updated. But for the future as a whole, this project will probably become depreciated, as I am from Slovenia and there are no Front end developer roles here, as well as having a class system that doesn't allow me to have a decant job only some shitty jobs where you die as soon as your shift is over .

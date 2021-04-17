@@ -9,14 +9,18 @@ const colors = {
     "THIRD_QUARTILE": '#196c2e', "FOURTH_QUARTILE": '#2ea043', plainFont: "#6C756E", highlightedFont: "#749179"},
     light: {"NONE": '#f5f6f8', "FIRST_QUARTILE": '#9be9a8', "SECOND_QUARTILE": '#40c463',"THIRD_QUARTILE": '#30a14e', 
     "FOURTH_QUARTILE": '#216e39', plainFont: "#657786", highlightedFont: "#48524d"},
-    purpleDark: {
-        "NONE": '#669999', 
-        "FIRST_QUARTILE": '#666699', 
-        "SECOND_QUARTILE": '#653399',
-        "THIRD_QUARTILE": '#663366', 
-        "FOURTH_QUARTILE": '#650099', 
-        plainFont: "#545179", 
-        highlightedFont: "#674973"
+    purpleDark: {"NONE": '#669999', "FIRST_QUARTILE": '#666699', "SECOND_QUARTILE": '#653399',
+    "THIRD_QUARTILE": '#663366', "FOURTH_QUARTILE": '#650099', plainFont: "#545179", highlightedFont: "#674973"},
+    jokerLight: {"NONE": '#ddddd5', "FIRST_QUARTILE": '#848c24', "SECOND_QUARTILE": '#905c35',
+    "THIRD_QUARTILE": '#ab341c', "FOURTH_QUARTILE": '#331b5c', plainFont: "#433c24", highlightedFont: "#1d140a"},
+    jokerDark: {
+        "NONE": '#1d140a', 
+        "FIRST_QUARTILE": '#331b5c', 
+        "SECOND_QUARTILE": '#ab341c',
+        "THIRD_QUARTILE": '#858a23', 
+        "FOURTH_QUARTILE": '#ddddd5', 
+        plainFont: "#433c24", 
+        highlightedFont: "#ab341c"
     }
 }
 
@@ -52,9 +56,11 @@ query ($userName:String!, $toDate:DateTime!, $fromDate: DateTime!) {
   }
 `;
 
-function GithubContributionCount({userName, toDate, fromDate, theme}) {
+function GithubContributionCount({userName, toDate, fromDate, theme, vertical}) {
     // Memoization allows the `useGraphQL` hook to avoid work in following renders
     // with the same GraphQL operation.
+    const [width, setWidth] = useState(640);
+    const [height, setHeight] = useState(137);
 
     const operation = React.useMemo(
       () => ({
@@ -91,13 +97,13 @@ function GithubContributionCount({userName, toDate, fromDate, theme}) {
         const weekData = contributions.weeks;
         const monthData = contributions.months;
         return (
-            <svg width="640" height="137">
+            <svg width={vertical ? height + 60 : width} height={vertical ? width / 1.5 : height}>
                 {
                     monthData.map((month, i) => (
                         <text
                             style={{fontFamily: 'Helvetica', fontSize: '12px'}}
-                            x={ 13 + i * 640 / 12} 
-                            y="20"
+                            x={vertical ? 35 : 13 + (i * width / 12)} 
+                            y={vertical ? 10 + (i * width  / 20) : 20}
                             fill={colors[theme].plainFont}
                             key={month.name}>{month.name}</text>
                         ))
@@ -107,11 +113,11 @@ function GithubContributionCount({userName, toDate, fromDate, theme}) {
                         week.contributionDays.map(day => (
                             <React.Fragment key={day.date}>
                                 <rect 
-                                    width="10" 
-                                    height="10" 
+                                    width={10} 
+                                    height={vertical ? 6 : 10} 
                                     fill={colors[theme][day.contributionLevel]}
-                                    x={i * 12} 
-                                    y={25 + day.weekday * 13}
+                                    x={vertical ? 60 + day.weekday * 11 : i * 12} 
+                                    y={vertical ? i * 7 : 25 + day.weekday * 13}
                                     rx="2"
                                     ry="2">
                                 </rect>
@@ -123,13 +129,13 @@ function GithubContributionCount({userName, toDate, fromDate, theme}) {
                     style={{fontFamily: 'Helvetica', fontSize: '14px'}}
                     fill={colors[theme].plainFont}
                     x="15" 
-                    y="134">Total contributions in {monthData[0].year}:
+                    y={vertical ?  2 + width / 1.6 : 134}>Total contributions in {monthData[0].year}:
                 </text>
                 <text 
                     style={{fontFamily: 'Helvetica', fontSize: '16px', fontWeight: 'bold'}}
                     fill={colors[theme].highlightedFont}
-                    x="200" 
-                    y="134">{contributions.totalContributions}
+                    x={vertical ? height / 1.7 : 200} 
+                    y={vertical ?  2 + width / 1.52 : 134}>{contributions.totalContributions}
                 </text>
             </svg>
         )
@@ -144,7 +150,7 @@ function GithubContributionCount({userName, toDate, fromDate, theme}) {
 
 const graphql = new GraphQL();
 
-function GithubContribution ({userName, theme}) {
+function GithubContribution ({userName, theme, vertical}) {
 
     const [dateRange, setDates] = useState({
         year: new Date().getFullYear(),
@@ -178,7 +184,12 @@ function GithubContribution ({userName, theme}) {
     return (
         <div>
             <GraphQLProvider graphql={graphql}>
-                <GithubContributionCount userName={userName} toDate={dateRange.toDate} fromDate={dateRange.fromDate} theme={theme} />
+                <GithubContributionCount 
+                    userName={userName} 
+                    toDate={dateRange.toDate} 
+                    fromDate={dateRange.fromDate} 
+                    theme={theme} 
+                    vertical={vertical} />
                 <svg width="640" height="10">
                     <polyline 
                         onClick={e => nextYear(e)}
